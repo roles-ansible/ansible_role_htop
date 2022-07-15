@@ -1,0 +1,6 @@
+---
+- name: install htop package
+  ansible.buildin.package:
+    name: 'htop'
+    state: present
+    become: true

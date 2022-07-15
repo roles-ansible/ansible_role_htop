@@ -1,3 +1,6 @@
 ---
+htop__compile: false
+htop__version: 'latest'
+
 # should we do a version check? (recomended)
 submodules_versioncheck: false
