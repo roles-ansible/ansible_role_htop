@@ -2,5 +2,8 @@
 htop__compile: false
 htop__version: 'latest'
 
+# parameters for compiling htop
+htop__compiled_path_prefix: '/usr/local'
+
 # should we do a version check? (recomended)
 submodules_versioncheck: false

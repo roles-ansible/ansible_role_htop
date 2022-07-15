@@ -1,4 +1,3 @@
 ---
-- name: compile htop from source
-  ansible.builtin.fail:
-    msg: "Not implemented (yet)"
+- name: check htop version if available
+  ansible.builtin.include_tasks: compile/version.yml

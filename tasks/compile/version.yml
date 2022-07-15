@@ -1,0 +1,43 @@
+---
+- name: "Check htop installed version"
+  ansible.builtin.shell: "set -eo pipefail; {{ htop__compiled_path_prefix }}/{{ htop__compiled_path_suffix }} --version | cut -d' ' -f 2"
+  args:
+    executable: /bin/bash
+  register: htop_active_version
+  changed_when: false
+  failed_when: false
+
+- name: "Determine 'latest' version release"
+  block:
+    - name: "Get latest gitea release metadata"
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/htop-dev/htop/releases/latest
+        return_content: true
+      register: htop_remote_metadata
+      when: not ansible_check_mode
+
+    - name: "Fail if running in check mode without versions set."
+      ansible.builtin.fail:
+        msg: |
+          "You are running this playbook in check mode:
+          Please set the Gitea version with the variable 'htop__version', because the URI module cannot detect the latest version in this mode."
+      when: ansible_check_mode and ( htop__version == 'latest' or htop__version == 'present' )
+
+    - name: "Set fact latest htop release"
+      ansible.builtin.set_fact:
+        htop_remote_version: "{{ htop_remote_metadata.json.tag_name }}"
+      when: not ansible_check_mode
+
+    - name: "Set htop version target (latest)"
+      ansible.builtin.set_fact:
+        htop__version_target: "{{ htop_remote_version }}"
+      when: not ansible_check_mode
+  when: htop__version == 'latest'
+
+- name: "Set htop version target ({{ gitea_version }})"
+  ansible.builtin.set_fact:
+    htop__version_target: "{{ htop__version }}"
+  when: htop__version != "latest"
+
+- debug:
+    msg: "{{ htop__version_target }}"
