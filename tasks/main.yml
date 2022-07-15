@@ -5,8 +5,8 @@
 
 - name: install htop via package manager
   ansible.builtin.include_tasks: install.yml
-  when: htop__compile | bool
+  when: not htop__compile | bool
 
 - name: compile htop from source
   ansible.builtin.include_tasks: compile.yml
-  when: not htop__compile | bool
+  when: htop__compile | bool
