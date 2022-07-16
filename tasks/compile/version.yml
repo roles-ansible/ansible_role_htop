@@ -38,6 +38,3 @@
   ansible.builtin.set_fact:
     htop__version_target: "{{ htop__version }}"
   when: htop__version != "latest"
-
-- debug:
-    msg: "{{ htop__version_target }}"
