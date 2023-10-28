@@ -1,12 +1,15 @@
 ---
-- name: run optional versionscheck
-  ansible.builtin.include_tasks: versioncheck.yml
-  when: submodules_versioncheck|bool
+- name: Run optional versionscheck
+  ansible.builtin.include_tasks:
+    file: 'versioncheck.yml'
+  when: submodules_versioncheck | bool
 
-- name: install htop via package manager
-  ansible.builtin.include_tasks: install.yml
+- name: Install htop via package manager
+  ansible.builtin.include_tasks:
+    file: 'install.yml'
   when: not htop__compile | bool
 
-- name: compile htop from source
-  ansible.builtin.include_tasks: compile.yml
+- name: Compile htop from source
+  ansible.builtin.include_tasks:
+    file: 'compile.yml'
   when: htop__compile | bool
