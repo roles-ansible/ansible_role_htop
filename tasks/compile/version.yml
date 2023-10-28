@@ -8,6 +8,7 @@
   failed_when: false
 
 - name: "Determine 'latest' version release"
+  when: htop__version == 'latest'
   block:
     - name: "Get latest gitea release metadata"
       ansible.builtin.uri:
@@ -32,7 +33,6 @@
       ansible.builtin.set_fact:
         htop__version_target: "{{ htop_remote_version }}"
       when: not ansible_check_mode
-  when: htop__version == 'latest'
 
 - name: "Set htop version target ({{ gitea_version }})"
   ansible.builtin.set_fact:

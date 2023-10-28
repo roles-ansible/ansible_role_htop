@@ -1,4 +1,4 @@
 ---
-- name: foo
-  debug:
+- name: Placeholder
+  ansible.builtin.debug:
     msg: install

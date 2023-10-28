@@ -9,8 +9,8 @@
   when:
     - ansible_pkg_mgr == "apt"
 
-- name: install htop package
+- name: Install htop package
   become: true
   ansible.builtin.package:
     name: 'htop'
-    state: present
+    state: 'present'

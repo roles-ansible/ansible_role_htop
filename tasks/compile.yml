@@ -1,7 +1,9 @@
 ---
-- name: check htop version if available
-  ansible.builtin.include_tasks: compile/version.yml
+- name: Check which htop version if available
+  ansible.builtin.include_tasks:
+    file: compile/version.yml
 
-- name: compile htop
-  ansible.builtin.include_tasks: compile/install.yml
+- name: Install compiled htop
+  ansible.builtin.include_tasks:
+    file: compile/install.yml
   when: (not ansible_check_mode and (htop_active_version.stdout != htop__version_target))
