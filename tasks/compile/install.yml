@@ -24,25 +24,30 @@
     dest: "{{ htop__compile_dir.path }}/htop_git"
     version: "{{ htop__version_target }}"
     repo: 'https://github.com/htop-dev/htop.git'
+  register: htop__compile_repo
 
 - name: Run autogen.sh
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: './autogen.sh'
   args:
     chdir: "{{ htop__compile_dir.path }}/htop_git"
+  changed_when: "htop__compile_dir.changed | bool or htop__compile_repo.changed | bool"
 
 - name: Run configure
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: "./configure --prefix={{ htop__compiled_path_prefix }}"
   args:
     chdir: "{{ htop__compile_dir.path }}/htop_git"
+  changed_when: "htop__compile_dir.changed | bool or htop__compile_repo.changed | bool"
 
 - name: Build the default target
   community.general.make:
     chdir: "{{ htop__compile_dir.path }}/htop_git"
+  changed_when: "htop__compile_dir.changed | bool or htop__compile_repo.changed | bool"
 
 - name: "Install htop to {{ htop__compiled_path_prefix }}"
   become: true
   community.general.make:
     chdir: "{{ htop__compile_dir.path }}/htop_git"
     target: 'install'
+  changed_when: "htop__compile_dir.changed | bool or htop__compile_repo.changed | bool"
