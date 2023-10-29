@@ -1,0 +1,7 @@
+---
+htop__compile_requirements:
+  - 'libncursesw5-dev'
+  - 'autotools-dev'
+  - 'autoconf'
+  - 'automake'
+  - 'build-essential'

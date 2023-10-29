@@ -1,5 +1,15 @@
 ---
 # versionscheck
-playbook_version_number: 04   # should be a integer
+playbook_version_number: 05   # should be a integer
 playbook_version_path: 'role-do1jlr.htop.version'
+
+# htop
 htop__compiled_path_suffix: 'bin/htop'
+
+# htop compile vars
+htop__load_vars:
+  files:
+    - "{{ ansible_os_family }}.yml"
+    - 'fallback.yml'
+  paths:
+    - 'vars'

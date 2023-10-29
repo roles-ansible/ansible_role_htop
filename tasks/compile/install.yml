@@ -1,4 +1,48 @@
 ---
-- name: Placeholder
-  ansible.builtin.debug:
-    msg: install
+- name: Update apt cache
+  become: true
+  ansible.builtin.apt:
+    cache_valid_time: 3600
+    update_cache: true
+  when: ansible_pkg_mgr == "apt"
+
+- name: Install build requirements
+  become: true
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: 'present'
+  loop: "{{ htop__compile_requirements }}"
+
+- name: Create directory to compile htop
+  ansible.builtin.tempfile:
+    state: 'directory'
+    suffix: htop
+  register: htop__compile_dir
+
+- name: Checkout desired htop version
+  ansible.builtin.git:
+    dest: "{{ htop__compile_dir.path }}/htop_git"
+    version: "{{ htop__version_target }}"
+    repo: 'https://github.com/htop-dev/htop.git'
+
+- name: Run autogen.sh
+  ansible.builtin.shell:
+    cmd: './autogen.sh'
+  args:
+    chdir: "{{ htop__compile_dir.path }}/htop_git"
+
+- name: Run configure
+  ansible.builtin.shell:
+    cmd: "./configure --prefix={{ htop__compiled_path_prefix }}"
+  args:
+    chdir: "{{ htop__compile_dir.path }}/htop_git"
+
+- name: Build the default target
+  community.general.make:
+    chdir: "{{ htop__compile_dir.path }}/htop_git"
+
+- name: "Install htop to {{ htop__compiled_path_prefix }}"
+  become: true
+  community.general.make:
+    chdir: "{{ htop__compile_dir.path }}/htop_git"
+    target: 'install'
