@@ -1,0 +1,6 @@
+---
+htop__compile_requirements:
+  - 'ncurses'
+  - 'automake'
+  - 'autoconf'
+  - 'gcc'
